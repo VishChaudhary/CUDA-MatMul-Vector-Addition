@@ -1,8 +1,14 @@
 #include "stdio.h"
 #include "math.h"
 
+__device__ void vecAdd(double* a,double *b, double *c, int n){
+  int i = blockDim.x * blockIdx.x + threadIdx.x;
+  if(i<n){
+    c[i] = a[i] + b[i];
+  }
+}
 
-__global__ createMat(float* a,float *b,float*c, n){
+__global__ void createMat(double* a,double *b,double*c, int n){
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   if(i<n){
     a[i] = sin(i) + cos(i);
@@ -11,24 +17,19 @@ __global__ createMat(float* a,float *b,float*c, n){
   vecAdd<<<ceil(n/256.0), 256>>>(a,b,c,n);
 }
 
-__device__ vecAdd(float* a,float *b, float *c, n){
-  int i = blockDim.x * blockIdx.x + threadIdx.x;
-  if(i<n){
-    c[i] = a[i] + b[i];
-  }
-}
+
 
 int main(){
 
 int n = 10000;
 
-size_t bytes = n * sizeof(float);
+int bytes = n * sizeof(double);
 
-float *a_h = (float*)malloc(bytes);
-float *b_h = (float*)malloc(bytes);
-float *c_h = (float*)malloc(bytes);
+double *a_h = (double*)malloc(bytes);
+double *b_h = (double*)malloc(bytes);
+double *c_h = (double*)malloc(bytes);
 
-float *a_d, b_d, c_d;
+double *a_d, b_d, c_d;
 
 cudaMalloc(&a_d, bytes);
 cudaMalloc(&b_d, bytes);
@@ -53,4 +54,3 @@ return 0;
 }
 
 
-}

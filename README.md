@@ -1,2 +1,2 @@
-# CUDA-Vector-Addition
-Adding vectors in parallel using CUDA
+# CUDA-MatMul-Vector-Addition
+Multiplying matricies and adding vectors in parallel using CUDA

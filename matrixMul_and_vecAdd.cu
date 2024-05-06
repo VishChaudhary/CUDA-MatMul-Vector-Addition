@@ -10,15 +10,19 @@ __global__ void vecAdd(float* a,float *b, float *c, int n){
     printf("GPU working, i=50\n");
   }
 }
+//multiplies two square matricies together 
+__global__ void MatrixMulKernel(float* M, float* N, float* P, int width){
+  int col = blockIdx.x * blockDim.x + threadIdx.x;
+  int row = blockIdx.y * blockDim.y + threadIdx.y;
 
-// __global__ void createMat(float* a,float *b,float*c, int n){
-//   int i = blockIdx.x * blockDim.x + threadIdx.x;
-//   if(i<n){
-//     a[i] = sin(i) + cos(i);
-//     b[i] = cos(i)*sin(i);
-//   }
-//   //vecAdd<<<ceil(n/256.0), 256>>>(a,b,c,n);
-// }
+  if((row<width) & (col < width)){
+    float Pvalue = 0;
+    for(int k =0; k<width; ++k){
+      Pvalue += M[row*width+k] * N[k*row+col];
+    }
+    P[row*Width+col] = Pvalue;
+  }
+}
 
 
 int main(){
